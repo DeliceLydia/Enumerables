@@ -86,31 +86,40 @@ def my_all(default = nil)
     if default
       arr.my_each do |i|
         count += 1 if i == default
-  end
-  elsif block_given?
-    arr.my_each do |i|
-      count += 1 if (yield i) == true
+      end
+    elsif block_given?
+      arr.my_each do |i|
+        count += 1 if (yield i) == true
+      end
+    else
+      arr.my_each do
+        count += 1
+      end
     end
-  else
-    arr.my_each do
-      count += 1
-    end
+    count
   end
-  count
-end
 
   def my_map(default = nil)
     arr = to_a
     mapped_arr = []
     if default == nil
-      arr.my_each do |i| mapped_arr.push(yield(i))
-      end
+      arr.my_each do |i| mapped_arr.push(yield(i)) end
       mapped_arr
     else
-      arr.my_each do |i| mapped_arr.push default.call(i)
-      end
+      arr.my_each do |i| mapped_arr.push default.call(i) end
       mapped_arr
+    end
   end
+
+  def my_inject(default = 0)
+    arr = to_a
+    arr.my_each do |i| default = yield(default, i) end
+    default
+  end
+
+  def multiply_els(array)
+    array.my_inject(1) do |product, i| product * i end
+  end
+ 
 end
-  
-end
+
