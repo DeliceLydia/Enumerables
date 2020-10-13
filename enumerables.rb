@@ -39,4 +39,44 @@ def my_all(default = nil)
     end
     true
   end
+
+  def my_any?(default = nil)
+    arr = to_a
+    if default == Numeric
+      arr.my_each do |i|
+        return true unless i.class == Integer || i.class == Float || i.class == Complex
+      end
+      false
+    elsif block_given?
+      arr.my_each do |i|
+        return true unless yield i
+      end
+      false
+    elsif !block_given? && !default
+      arr.my_each do |i|
+        return true unless i
+      end
+      false
+    end
+  end
+
+  def my_none?(default = nil)
+    arr = to_a
+    if default == Numeric
+      arr.my_each do |i|
+        return true unless i.class == Integer || i.class == Float || i.class == Complex
+      end
+      false
+    elsif block_given?
+      arr.my_each do |i|
+        return false unless yield i
+      end
+      true
+    elsif !block_given? && !default
+      arr.my_each do |i|
+        return false unless i
+      end
+      true
+    end
+  end
 end
