@@ -1,125 +1,61 @@
+# frozen_string_literal: true
+
 module Enumerables
   def my_each
-    arr = to_a
     arr.length.time { |i| yield(arr[i]) }
     arr
   end
 
   def my_each_with_index
-    arr = to_a
     arr.length.time { |i| yield(arr[i], i) }
     arr
   end
 
   def my_select
-    arr = to_a
-    filtered_arr = []
-    arr.my_each do |i|
-      result.push(i) if yield i
-    end
-    filtered_arr
-  end
-end
-
-def my_all(default = nil)
-  arr = to_a
-  if default == Numeric
-    arr.my_each do |i|
-      return false unless i.class == Integer || i.class == Float || i.class == Complex
-    end
-    true
-  elsif block_given?
-    arr.my_each do |i|
-      return false unless yield i
-    end
-    true
-  elsif !block_given? && !default
-    arr.my_each do |i|
-      return false unless i
-    end
-    true
+    array = []
+    arr.my_each { |i| array << i if yield(i) }
+    array
   end
 
-  def my_any?(default = nil)
-    arr = to_a
-    if default == Numeric
-      arr.my_each do |i|
-        return true unless i.class == Integer || i.class == Float || i.class == Complex
-      end
-      false
-    elsif block_given?
-      arr.my_each do |i|
-        return true unless yield i
-      end
-      false
-    elsif !block_given? && !default
-      arr.my_each do |i|
-        return true unless i
-      end
-      false
-    end
+  def my_all?
+    output = true
+    arr.my_each { |i| break output = false unless yield(i) }
+    output
   end
 
-  def my_none?(default = nil)
-    arr = to_a
-    if default == Numeric
-      arr.my_each do |i|
-        return true unless i.class == Integer || i.class == Float || i.class == Complex
-      end
-      false
-    elsif block_given?
-      arr.my_each do |i|
-        return false unless yield i
-      end
-      true
-    elsif !block_given? && !default
-      arr.my_each do |i|
-        return false unless i
-      end
-      true
-    end
+  def my_any?
+    output = false
+    arr.my_each { |i| break output = true unless yield(i) }
+    output
   end
 
-  def my_count(default = nil)
-    arr = to_a
+  def my_none?
+    output = true
+    arr.my_each { |i| break output = false if yield(i) }
+    output
+  end
+
+  def my_count(arg)
     count = 0
-    if default
-      arr.my_each do |i|
-        count += 1 if i == default
-      end
-    elsif block_given?
-      arr.my_each do |i|
-        count += 1 if (yield i) == true
-      end
-    else
-      arr.my_each do
-        count += 1
-      end
-    end
+    arr.my_each { |i| count += 1 if arg == i }
     count
   end
 
-  def my_map(default = nil)
-    arr = to_a
+  def my_map(proc = nil)
     mapped_arr = []
-    if default == nil
-      arr.my_each do |i| mapped_arr.push(yield(i)) end
-      mapped_arr
-    else
-      arr.my_each do |i| mapped_arr.push default.call(i) end
-      mapped_arr
-    end
+    block_given?
+    arr.my_each { |i| mapped_arr << yield(i) }
+    arr.my_each { |i| mapped_arr proc.call(i) }
+    mapped_arr
   end
 
   def my_inject(default = 0)
     arr = to_a
-    arr.my_each do |i| default = yield(default, i) end
+    arr.my_each { |i| default = yield(default, i) }
     default
   end
-
-  def multiply_els(array)
-    array.my_inject(1) do |product, i| product * i end
-  end
- 
 end
 
+def multiply_els(array)
+  array.my_inject(1) { |product, i| product * i }
+end
