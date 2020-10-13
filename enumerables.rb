@@ -79,4 +79,38 @@ def my_all(default = nil)
       true
     end
   end
+
+  def my_count(default = nil)
+    arr = to_a
+    count = 0
+    if default
+      arr.my_each do |i|
+        count += 1 if i == default
+  end
+  elsif block_given?
+    arr.my_each do |i|
+      count += 1 if (yield i) == true
+    end
+  else
+    arr.my_each do
+      count += 1
+    end
+  end
+  count
+end
+
+  def my_map(default = nil)
+    arr = to_a
+    mapped_arr = []
+    if default == nil
+      arr.my_each do |i| mapped_arr.push(yield(i))
+      end
+      mapped_arr
+    else
+      arr.my_each do |i| mapped_arr.push default.call(i)
+      end
+      mapped_arr
+  end
+end
+  
 end
