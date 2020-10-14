@@ -17,39 +17,39 @@ module Enumerable
     return to_enum unless block_given?
 
     array = []
-    my_each { |i| array << i if yield(i) }
+    self.my_each { |i| array << i if yield(i) }
     array
   end
 
   def my_all?
     output = true
-    my_each { |i| break output = false unless yield(i) }
+    self.my_each { |i| break output = false unless yield(i) }
     output
   end
 
   def my_any?
     output = false
-    my_each { |i| break output = true unless yield(i) }
+    self.my_each { |i| break output = true unless yield(i) }
     output
   end
 
   def my_none?
     output = true
-    my_each { |i| break output = false if yield(i) }
+    self.my_each { |i| break output = false if yield(i) }
     output
   end
 
   def my_count(arg)
     count = 0
-    my_each { |i| count += 1 if arg == i }
+    self.my_each { |i| count += 1 if arg == i }
     count
   end
 
   def my_map(proc = nil)
     mapped_arr = []
     block_given?
-    my_each { |i| mapped_arr << yield(i) }
-    my_each { |i| mapped_arr proc.call(i) }
+    self.my_each { |i| mapped_arr << yield(i) }
+    self.my_each { |i| mapped_arr proc.call(i) }
     mapped_arr
   end
 
