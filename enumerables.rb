@@ -1,6 +1,3 @@
-# frozen_string_literal: true
-
-# This is an enumerable module
 module Enumerables
   def my_each
     arr.length.time { |i| yield(arr[i]) }
