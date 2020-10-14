@@ -3,7 +3,7 @@ This project consist of implementing  our own version of Ruby’s enumerable met
 
 
 ## Project Requirements
-We were required to implement the following Ruby method:
+We were required to implement the following Ruby methods:
 
 - my_each
 - my_each_with_index
