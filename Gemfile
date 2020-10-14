@@ -2,4 +2,5 @@
 
 gem 'rubocop', '~>0.81.0'
 source 'https://rubygems.org'
+gem "rake"
 gem 'rufo'

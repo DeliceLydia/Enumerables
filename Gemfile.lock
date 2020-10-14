@@ -7,6 +7,7 @@ GEM
     parser (2.7.2.0)
       ast (~> 2.4.1)
     rainbow (3.0.0)
+    rake (13.0.1)
     rexml (3.2.4)
     rubocop (0.81.0)
       jaro_winkler (~> 1.5.1)
@@ -24,6 +25,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rake
   rubocop (~> 0.81.0)
   rufo
 
