@@ -2,14 +2,14 @@ module Enumerable
   def my_each
     return to_enum unless block_given?
 
-    self.length.times { |i| yield(self[i]) }
+    length.times { |i| yield(self[i]) }
     self
   end
 
   def my_each_with_index
     return to_enum unless block_given?
 
-    self.length.times { |i| yield(self[i], i) }
+    length.times { |i| yield(self[i], i) }
     self
   end
 
@@ -17,39 +17,39 @@ module Enumerable
     return to_enum unless block_given?
 
     array = []
-    self.my_each { |i| array << i if yield(i) }
+    my_each { |i| array << i if yield(i) }
     array
   end
 
   def my_all?
     output = true
-    self.my_each { |i| break output = false unless yield(i) }
+    my_each { |i| break output = false unless yield(i) }
     output
   end
 
   def my_any?
     output = false
-    self.my_each { |i| break output = true unless yield(i) }
+    my_each { |i| break output = true unless yield(i) }
     output
   end
 
   def my_none?
     output = true
-    self.my_each { |i| break output = false if yield(i) }
+    my_each { |i| break output = false if yield(i) }
     output
   end
 
   def my_count(arg)
     count = 0
-    self.my_each { |i| count += 1 if arg == i }
+    my_each { |i| count += 1 if arg == i }
     count
   end
 
   def my_map(proc = nil)
     mapped_arr = []
     block_given?
-    self.my_each { |i| mapped_arr << yield(i) }
-    self.my_each { |i| mapped_arr proc.call(i) }
+    my_each { |i| mapped_arr << yield(i) }
+    my_each { |i| mapped_arr proc.call(i) }
     mapped_arr
   end
 
