@@ -32,7 +32,7 @@ We were required to implement the following Ruby methods:
 3. Copy and paste the following code into the Terminal:
 
 
-   ``` https://github.com/DeliceLydia/Enumerables/tree/feature-branch ```
+   ``` https://github.com/DeliceLydia/Enumerables/tree/hotfix ```
 
 4. Enter.
 
