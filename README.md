@@ -56,6 +56,6 @@ We were required to implement the following Ruby methods:
 
 ## Show your support
 
-Give a ⭐️ if you like this project!
+Give a ⭐️ on Github if you like this project!
 
 
