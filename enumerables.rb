@@ -39,12 +39,16 @@ module Enumerable
   end
 
   def my_all?
+    # return to_enum unless block_given?
+
+    elements = to_a
     output = true
-    my_each { |i| break output = false unless yield(i) }
+    elements.my_each { |i| break output = false unless yield(i) }
     output
   end
 
   def my_any?
+    return to_enum 
     output = false
     my_each { |i| break output = true unless yield(i) }
     output
@@ -80,6 +84,8 @@ def multiply_els(array)
   array.my_inject(1) { |product, i| product * i }
 end
 
-# test = [4, 5, 6]
+test = [4, 5, 6]
 # result = []
 # test1 = test.my_select{|x| puts result.push(x >4) }
+puts "my_all?:"
+p test.my_all? {}
