@@ -38,21 +38,21 @@ module Enumerable
     array
   end
 
-  def my_all?(x = nil)
+  def my_all?(default = nil)
     elements = to_a
-    if x == Numeric
+    if default == Numeric
       elements.my_each do |i|
         return false unless i.class == Integer || i.class == Float || i.Complex
       end
       true
-    elsif x.class == Class
+    elsif default.class == Class
       elements.my_each do |i|
-        return false unless i.class == x
+        return false unless i.class == default
       end
       true
-    elsif x.class == Regexp
+    elsif default.class == Regexp
       elements.my_each do |i|
-        return false unless i =~ x
+        return false unless i =~ default
       end
       true
     elsif block_given?
@@ -60,34 +60,34 @@ module Enumerable
         return false unless yield i
       end
       true
-    elsif !block_given? && !x
+    elsif !block_given? && !default
       elements.my_each do |i|
         return false unless i
       end
       true
-    elsif x.class != Regexp && x.class != Class
+    elsif default.class != Regexp && default.class != Class
       elements.my_each do |i|
-        return false unless i == x
+        return false unless i == default
       end
       true
     end
   end
 
-  def my_any?(x = nil)
+  def my_any?(default = nil)
     elements = to_a
-    if x == Numeric
+    if default == Numeric
       elements.my_each do |i|
         return true if i.class == Integer || i.class == Float || i.Complex
       end
       false
-    elsif x.class == Class
+    elsif default.class == Class
       elements.my_each do |i|
-        return true if i.class == x
+        return true if i.class == default
       end
       false
-    elsif x.class == Regexp
+    elsif default.class == Regexp
       elements.my_each do |i|
-        return true if i =~ x
+        return true if i =~ default
       end
       false
     elsif block_given?
@@ -95,36 +95,34 @@ module Enumerable
         return true if yield i
       end
       false
-    elsif !block_given? && !x
+    elsif !block_given? && !default
       elements.my_each do |i|
         return true if i
       end
       false
-    elsif x.class != Regexp && x.class != Class
+    elsif default.class != Regexp && default.class != Class
       elements.my_each do |i|
-        return true if i == x
+        return true if i == default
       end
       false
     end
   end
 
-   
-
-  def my_none?(x = nil)
+  def my_none?(default = nil)
     elements = to_a
-    if x == Numeric
+    if default == Numeric
       elements.my_each do |i|
         return true unless i.class == Integer || i.class == Float || i.Complex
       end
       false
-    elsif x.class == Class
+    elsif default.class == Class
       elements.my_each do |i|
-        return false if i.class == x
+        return false if i.class == default
       end
       true
-    elsif x.class == Regexp
+    elsif default.class == Regexp
       elements.my_each do |i|
-        return false if i =~ x
+        return false if i =~ default
       end
       true
     elsif block_given?
@@ -132,30 +130,43 @@ module Enumerable
         return false if yield i
       end
       true
-    elsif !block_given? && !x
+    elsif !block_given? && !default
       elements.my_each do |i|
         return false if i
       end
       true
-    elsif x.class != Regexp && x.class != Class
+    elsif default.class != Regexp && default.class != Class
       elements.my_each do |i|
-        return false if i == x
+        return false if i == default
       end
       true
     end
   end
 
-  def my_count(arg)
+  def my_count(default = nil)
+    elements = to_a
     count = 0
-    my_each { |i| count += 1 if arg == i }
+    if default
+      elements.my_each do |i|
+        count += 1 if i == default
+      end
+    elsif block_given?
+      elements.my_each do |i|
+        count += 1 if (yield i) == true
+      end
+    else
+      elements.my_each do
+        count += 1
+      end
+    end
     count
   end
 
-  def my_map(proc = nil)
+  def my_map
+    return to_enum unless block_given?
+
     mapped_arr = []
-    block_given?
     my_each { |i| mapped_arr << yield(i) }
-    my_each { |i| mapped_arr proc.call(i) }
     mapped_arr
   end
 
