@@ -73,17 +73,76 @@ module Enumerable
     end
   end
 
-  def my_any?
-    return to_enum
-    output = false
-    my_each { |i| break output = true unless yield(i) }
-    output
+  def my_any?(x = nil)
+    elements = to_a
+    if x == Numeric
+      elements.my_each do |i|
+        return true if i.class == Integer || i.class == Float || i.Complex
+      end
+      false
+    elsif x.class == Class
+      elements.my_each do |i|
+        return true if i.class == x
+      end
+      false
+    elsif x.class == Regexp
+      elements.my_each do |i|
+        return true if i =~ x
+      end
+      false
+    elsif block_given?
+      elements.my_each do |i|
+        return true if yield i
+      end
+      false
+    elsif !block_given? && !x
+      elements.my_each do |i|
+        return true if i
+      end
+      false
+    elsif x.class != Regexp && x.class != Class
+      elements.my_each do |i|
+        return true if i == x
+      end
+      false
+    end
   end
 
-  def my_none?
-    output = true
-    my_each { |i| break output = false if yield(i) }
-    output
+   
+
+  def my_none?(x = nil)
+    elements = to_a
+    if x == Numeric
+      elements.my_each do |i|
+        return true unless i.class == Integer || i.class == Float || i.Complex
+      end
+      false
+    elsif x.class == Class
+      elements.my_each do |i|
+        return false if i.class == x
+      end
+      true
+    elsif x.class == Regexp
+      elements.my_each do |i|
+        return false if i =~ x
+      end
+      true
+    elsif block_given?
+      elements.my_each do |i|
+        return false if yield i
+      end
+      true
+    elsif !block_given? && !x
+      elements.my_each do |i|
+        return false if i
+      end
+      true
+    elsif x.class != Regexp && x.class != Class
+      elements.my_each do |i|
+        return false if i == x
+      end
+      true
+    end
   end
 
   def my_count(arg)
