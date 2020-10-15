@@ -38,17 +38,43 @@ module Enumerable
     array
   end
 
-  def my_all?
-    # return to_enum unless block_given?
-
+  def my_all?(x = nil)
     elements = to_a
-    output = true
-    elements.my_each { |i| break output = false unless yield(i) }
-    output
+    if x == Numeric
+      elements.my_each do |i|
+        return false unless i.class == Integer || i.class == Float || i.Complex
+      end
+      true
+    elsif x.class == Class
+      elements.my_each do |i|
+        return false unless i.class == x
+      end
+      true
+    elsif x.class == Regexp
+      elements.my_each do |i|
+        return false unless i =~ x
+      end
+      true
+    elsif block_given?
+      elements.my_each do |i|
+        return false unless yield i
+      end
+      true
+    elsif !block_given? && !x
+      elements.my_each do |i|
+        return false unless i
+      end
+      true
+    elsif x.class != Regexp && x.class != Class
+      elements.my_each do |i|
+        return false unless i == x
+      end
+      true
+    end
   end
 
   def my_any?
-    return to_enum 
+    return to_enum
     output = false
     my_each { |i| break output = true unless yield(i) }
     output
@@ -83,9 +109,3 @@ end
 def multiply_els(array)
   array.my_inject(1) { |product, i| product * i }
 end
-
-test = [4, 5, 6]
-# result = []
-# test1 = test.my_select{|x| puts result.push(x >4) }
-puts "my_all?:"
-p test.my_all? {}
