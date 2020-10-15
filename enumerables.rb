@@ -170,12 +170,17 @@ module Enumerable
     mapped_arr
   end
 
-  def my_inject(default = 0)
-    my_each { |i| default = yield(default, i) }
-    default
+  def my_inject(memo = self[0])
+    my_each_with_index do |value, index|
+      memo = yield(memo, value) if index > 0
+    end
+    memo
   end
 end
 
 def multiply_els(array)
-  array.my_inject(1) { |product, i| product * i }
+  array.my_inject { |product, i| product * i }
 end
+
+result = multiply_els([2, 4, 5])
+puts result
