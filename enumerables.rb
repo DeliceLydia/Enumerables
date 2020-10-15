@@ -1,23 +1,40 @@
 module Enumerable
+  def return_array(elements)
+    if self.class == Range
+      self
+    else
+      elements
+    end
+  end
+
   def my_each
     return to_enum unless block_given?
 
-    length.times { |i| yield(self[i]) }
-    self
+    elements = to_a
+    elements.length.times do |i|
+      yield(elements[i])
+    end
+    return_array(elements)
   end
 
   def my_each_with_index
     return to_enum unless block_given?
 
-    length.times { |i| yield(self[i], i) }
-    self
+    elements = to_a
+    elements.length.times do |i|
+      yield(elements[i], i)
+    end
+    return_array(elements)
   end
 
   def my_select
     return to_enum unless block_given?
 
+    elements = to_a
     array = []
-    my_each { |i| array << i if yield(i) }
+    elements.my_each do |i|
+      array.push(i) if yield(i)
+    end
     array
   end
 
@@ -63,5 +80,6 @@ def multiply_els(array)
   array.my_inject(1) { |product, i| product * i }
 end
 
-test = multiply_els([4, 5, 6])
-puts test
+# test = [4, 5, 6]
+# result = []
+# test1 = test.my_select{|x| puts result.push(x >4) }
