@@ -42,7 +42,9 @@ module Enumerable
     elements = to_a
     if default == Numeric
       elements.my_each do |i|
-        return false unless i.class == Integer || i.class == Float || i.Complex
+        unless i.class == Integer || i.class == Float || i.class == Complex
+          return false
+        end
       end
       true
     elsif default.class == Class
@@ -77,7 +79,9 @@ module Enumerable
     elements = to_a
     if default == Numeric
       elements.my_each do |i|
-        return true if i.class == Integer || i.class == Float || i.Complex
+        if i.class == Integer || i.class == Float || i.class == Complex
+          return true
+        end
       end
       false
     elsif default.class == Class
@@ -112,7 +116,9 @@ module Enumerable
     elements = to_a
     if default == Numeric
       elements.my_each do |i|
-        return true unless i.class == Integer || i.class == Float || i.Complex
+        unless i.class == Integer || i.class == Float || i.class == Complex
+          return true
+        end
       end
       false
     elsif default.class == Class
@@ -162,25 +168,57 @@ module Enumerable
     count
   end
 
-  def my_map
-    return to_enum unless block_given?
+  def my_map(proc = nil)
+    elements = to_a
+    array = []
+    if block_given? ?
+       elements.my_each { |i| array << yield(i) } :
+       elements.my_each { |i| array << proc.call(i) }
+      array
+   end
 
-    mapped_arr = []
-    my_each { |i| mapped_arr << yield(i) }
-    mapped_arr
-  end
-
-  def my_inject(memo = self[0])
-    my_each_with_index do |value, index|
-      memo = yield(memo, value) if index > 0
+    def my_inject(first_argg = nil, sym = nil)
+      elements = to_a
+      if first_argg && sym
+        arg = sym
+        accumulate = first_argg
+        elements.my_each_with_index do |element, _i|
+          accumulate = accumulate.send(arg, element)
+        end
+        return accumulate
+      elsif first_argg && !sym
+        arg = first_argg
+      elsif !first_argg && !sym
+        accumulate = nil
+        elements.my_each do |element|
+          accumulate = if accumulate.nil?
+                         element
+                       else
+                         yield accumulate, element
+            end
+        end
+      end
+      if arg.class == Symbol
+        accumulate = nil
+        elements.my_each do |element|
+          accumulate = if accumulate.nil?
+                         element
+                       else
+                         accumulate.send(arg, element)
+            end
+        end
+      elsif block_given? && arg
+        accumulate = arg
+        elements.my_each do |element|
+          accumulate = yield accumulate, element
+        end
+      end
+      accumulate
     end
-    memo
-  end
+end
 end
 
 def multiply_els(array)
-  array.my_inject { |product, i| product * i }
+  array.my_inject { |product, i| product + i }
 end
-
-result = multiply_els([2, 4, 5])
-puts result
+my_proc = proc { |i| i * 4 }
