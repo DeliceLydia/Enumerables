@@ -208,21 +208,20 @@ module Enumerable
   end
 
   def my_map(proc = nil)
+    return to_enum unless block_given?
+
     elements = to_a
+
     array = []
-    if block_given? ?
-       elements.my_each { |i| array << yield(i) } :
-       elements.my_each { |i| array << proc.call(i) }
-      array
-    end
-end
+    block_given? ?
+      elements.my_each { |i| array << proc.call(i) } :
+      elements.my_each { |i| array << yield(i) }
+    array
+  end
 end
 
 def multiply_els(array)
   array.my_inject { |product, i| product * i }
 end
 
-result = multiply_els([2, 4, 5])
-puts result
-
-my_proc = proc { |i| i * 4 }
+my_proc = proc { |i| i * 3 }
