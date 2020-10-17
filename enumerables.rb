@@ -207,16 +207,18 @@ module Enumerable
     accumulate
   end
 
-  def my_map(proc = nil)
-    return to_enum unless block_given?
+  def my_map(arg = nil)
+    return to_enum if !block_given? && !arg
 
-    elements = to_a
-
-    array = []
-    block_given? ?
-      elements.my_each { |i| array << proc.call(i) } :
-      elements.my_each { |i| array << yield(i) }
-    array
+    elements = clone.to_a
+    elements.my_each_with_index do |element, i|
+      elements[i] = if arg
+                      arg.call(element)
+                    else
+                      yield element
+        end
+    end
+    elements
   end
 end
 
@@ -224,4 +226,4 @@ def multiply_els(array)
   array.my_inject { |product, i| product * i }
 end
 
-my_proc = proc { |i| i * 3 }
+my_proc = proc { |i| i * 2 }
