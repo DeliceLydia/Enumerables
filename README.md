@@ -44,7 +44,7 @@ We were required to implement the following Ruby methods:
 
 - Github: [@DeliceLydia](https://github.com/DeliceLydia)
 - Twitter: [@IngabireLydia3](https://twitter.com/IngabireLydia)
-- Linkedin: [Delice Lydia](https://www.linkedin.com/in/delice-lydia-91b55b167/)
+- Linkedin: [Delice Lydia](www.linkedin.com/in/delice-lydia)
 
 👤 **Author2**
 
